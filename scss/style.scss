@@ -1,0 +1,83 @@
+@use "reset";
+
+// Variable overrides first
+$primary: #900;
+$enable-shadows: true;
+$prefix: "mo-";
+
+// Then import Bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// Functions first
+@import "../node_modules/bootstrap/scss/functions";
+
+// Variable overrides second
+$primary: #900;
+$enable-shadows: true;
+$prefix: "mo-";
+
+// Required Bootstrap imports
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+// Optional components
+@import "../node_modules/bootstrap/scss/utilities";
+@import "../node_modules/bootstrap/scss/reboot";
+@import "../node_modules/bootstrap/scss/containers";
+@import "../node_modules/bootstrap/scss/grid";
+@import "../node_modules/bootstrap/scss/helpers";
+@import "../node_modules/bootstrap/scss/utilities/api";
+
+:root {
+    --mo-secondary-color: #bbbbbb;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    padding: 1rem;
+    color: black;
+}
+
+.big {
+    font-size: 2rem;
+    padding: 0rem;
+    margin: 0rem;
+}
+
+.card-img-top {
+    border-radius: 1000px;
+    width: 3rem;
+}
+
+.card {
+    padding: 10px;
+    color: #252525;
+}
+
+.btn {
+        box-shadow: 2px 2px 3px black;
+}
+
+body {
+    background-color: #252525;
+    color: #ffffff;
+}
+
+main {
+    width: min(80ch, 100vw - 2rem);
+    margin-inline: auto;
+}
+
+//textarea {
+//    background-image: url(../img/alexandro.png);
+//    background-size: contain;
+//}
+
+a {
+    color: #00ddff;
+}

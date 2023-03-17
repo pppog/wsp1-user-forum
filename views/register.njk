@@ -1,0 +1,16 @@
+{% extends "layout.njk" %}
+{% block  content %}
+<h1>{{title}}</h1>
+<form action="/register" method="POST">
+
+    <label for="username">username</label>
+    <input type="text" name="username" id="username">
+
+
+    <label for="password">password</label>
+    <input type="password" name="password" id="password">
+    <label for="password">password confirmation</label>
+    <input type="password" name="passwordConfirmation" id="password">
+
+<button type="submit">Register</button>
+{% endblock %}

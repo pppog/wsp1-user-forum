@@ -1,26 +1,37 @@
 {
-    "name": "wsp1-user-forum",
-    "version": "1.0.0",
-    "description": "",
-    "main": "server.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon -e js,html,njk ./server.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "nodemon": "^2.0.21"
-    },
-    "dependencies": {
-        "bcrypt": "^5.1.0",
-        "cookie-parser": "^1.4.6",
-        "dotenv": "^16.0.3",
-        "express": "^4.18.2",
-        "express-session": "^1.17.3",
-        "morgan": "^1.10.0",
-        "mysql2": "^3.2.0",
-        "nunjucks": "^3.2.3"
-    }
+  "name": "wsp1-user-forum",
+  "version": "1.0.0",
+  "description": "## History",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -e js,html,njk ./server.js",
+    "start": "nodemon -e njk,js server.js & npm run scss",
+    "scss": "sass --watch scss:public/css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bootstrap": "^5.2.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.2.0",
+    "nunjucks": "^3.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pppog/wsp1-user-forum.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pppog/wsp1-user-forum/issues"
+  },
+  "homepage": "https://github.com/pppog/wsp1-user-forum#readme"
 }

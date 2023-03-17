@@ -13,11 +13,9 @@ const pool = mysql.createPool({
 const promisePool = pool.promise();
 
 router.get('/', async function (req, res, next) {
-    const [users] = await promisePool.query("SELECT * FROM lo28users");
-    const [rows] = await promisePool.query("SELECT * FROM lo28forum ORDER BY createdAt DESC");
+    const [rows] = await promisePool.query("SELECT lo28forum.*, lo28users.name FROM lo28forum JOIN lo28users WHERE  lo28forum.authorId = lo28users.id ORDER BY createdAt DESC");
     res.render('index.njk', {
         rows: rows,
-        users: users,
         title: 'Forum',
     });
 });

@@ -13,16 +13,18 @@ const pool = mysql.createPool({
 const promisePool = pool.promise();
 
 router.get('/', async function (req, res, next) {
-    const [rows] = await promisePool.query("SELECT lo28forum.*, lo28users.name FROM lo28forum JOIN lo28users WHERE  lo28forum.authorId = lo28users.id ORDER BY createdAt DESC");
+    const [rows] = await promisePool.query("SELECT lo28forum.*, lo28users.name FROM lo28forum JOIN lo28users WHERE lo28forum.authorId = lo28users.id ORDER BY createdAt DESC");
     res.render('index.njk', {
         rows: rows,
         title: 'Forum',
+        loggedin: req.session.loggedin || false,
     });
 });
 
 router.get('/access', async function (req, res, next) {
     res.render('access.njk', {
         title: 'ACCESS DENIED',
+        loggedin: req.session.loggedin || false,
     });
 });
 
@@ -38,6 +40,7 @@ router.get('/post/:id', async function (req, res, next) {
     res.render('post.njk', {
         post: rows[0],
         title: 'Forum',
+        loggedin: req.session.loggedin || false,
     });
 });
 
@@ -54,6 +57,7 @@ router.get('/subscribe', async function (req, res, next) {
     res.render('subscribe.njk', {
         rows: rows,
         title: 'Forum',
+        loggedin: req.session.loggedin || false,
     });
 });
 
@@ -68,6 +72,7 @@ router.get('/new', async function (req, res, next) {
     res.render('new.njk', {
         title: 'Nytt inlägg',
         users,
+        loggedin: req.session.loggedin || false,
     });
 }
 });
@@ -96,15 +101,27 @@ router.get('/profile', async function (req, res, next) {
         
         return res.status(401).redirect('/access');
     } else {
-        const [rows] = await promisePool.query("SELECT * FROM lo28forum WHERE authorId = ?", [req.session.userid]);
+        const [rows] = await promisePool.query("SELECT lo28forum.*, lo28users.name FROM lo28forum JOIN lo28users WHERE lo28forum.authorId = lo28users.id AND lo28users.id = ?", [req.session.userid]);
         console.log(rows)
-    const [username] = await promisePool.query('SELECT * FROM lo28users WHERE id = ?', [req.session.userid],);
     res.render('profile.njk', {
         title: 'Profile',
-        username: username[0].name,
         rows: rows,
+        loggedin: req.session.loggedin || false,
+        username: req.session.username,
     });}
 });
+
+router.get('/user/:name', async function (req, res, next) {
+        const [rows] = await promisePool.query("SELECT lo28forum.*, lo28users.name FROM lo28forum JOIN lo28users WHERE lo28forum.authorId = lo28users.id AND lo28users.name = ?", [req.params.name]);
+        if (req.session.username === req.params.name) {
+            return res.redirect('/profile')
+        }
+    res.render('user.njk', {
+        title: 'user',
+        rows: rows,
+    });
+});
+
 
 router.get('/crypt/:password', function (req, res, next) {
     bcrypt.hash(req.params.password, 10, function (err, hash) {
@@ -183,6 +200,7 @@ router.post('/login', async function (req, res, next) {
             console.log(users);
             req.session.loggedin = true;
             req.session.userid = users[0].id;
+            req.session.username = username;
             return res.redirect('/profile');
         } else {
             return res.json('Invalid username or password');

@@ -1,8 +1,10 @@
 {% extends "layout.njk" %}
 {% block content %}
 <div class="card" style="width: 100%;">
+  <a href="/user/{{ post.username }}">
   <img src="../img/alexandro.png" class="card-img-top" alt="alekandro">
   <p>{{ post.username }}</p>
+  </a>
   <div class="card-body">
     <h5 class="card-title">{{ post.title }}</h5>
     <p class="card-text">{{ post.content }}</p>

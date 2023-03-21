@@ -39,7 +39,7 @@ router.get('/post/:id', async function (req, res, next) {
     console.log(rows[0])
     res.render('post.njk', {
         post: rows[0],
-        title: 'Forum',
+        title: 'Post',
         loggedin: req.session.loggedin || false,
     });
 });

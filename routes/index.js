@@ -48,7 +48,7 @@ router.get('/signin', async function (req, res, next) {
     const [rows] = await promisePool.query("SELECT * FROM lo28forum");
     res.render('signin.njk', {
         rows: rows,
-        title: 'Forum',
+        title: 'SignIn',
     });
 });
 
@@ -56,7 +56,7 @@ router.get('/subscribe', async function (req, res, next) {
     const [rows] = await promisePool.query("SELECT * FROM lo28forum");
     res.render('subscribe.njk', {
         rows: rows,
-        title: 'Forum',
+        title: 'Subscribe',
         loggedin: req.session.loggedin || false,
     });
 });

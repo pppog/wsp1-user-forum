@@ -1,0 +1,21 @@
+{% extends "layout.njk" %}
+{% block content %}
+
+<div class="card" style="width: 100%;">
+  <img src="../img/alexandro.png" class="card-img-top" alt="alekandro">
+  <p>{{ post.username }}</p>
+  <div class="card-body">
+    <h5 class="card-title">{{ post.title }}</h5>
+  </div>
+</div>
+<small class="text-muted">{{ post.createdAt }}</small>
+
+<form action="/comment" method="post">
+<textarea name="postid" id="postid" cols="0" rows="0" placeholder="postid" hidden>{{ post.id }}</textarea>
+    <label for="content">Innehåll</label>
+    <br>
+    <textarea name="content" id="content" cols="30" rows="10" placeholder="Write your comment here"></textarea>
+    <br>
+    <button type="submit">Kommentera</button>
+</form>
+{% endblock %}

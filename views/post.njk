@@ -8,8 +8,29 @@
   <div class="card-body">
     <h5 class="card-title">{{ post.title }}</h5>
     <p class="card-text">{{ post.content }}</p>
-    <a href="../img/alexandro.png" class="btn btn-primary">Kommentera</a>
+    {% if loggedin === true %}
+    <a href="/comment/ {{ post.id }}" class="btn btn-primary">Kommentera</a>
+    {% endif %}
   </div>
 </div>
 <small class="text-muted">{{ post.createdAt }}</small>
+
+
+    <ul>
+  {% for row in rows %}
+  <li>
+<div class="card" style="width: 100%;">
+    <a href="/user/{{ row.name }}">
+  <img src="../img/alexandro.png" class="card-img-top" alt="alekandro">
+  <p>{{ row.name }}</p>
+  </a>
+  <div class="card-body">
+    <h5 class="card-title">{{ row.ucomment }}</h5>
+  </div>
+</div>
+<small class="text-muted">{{ row.createdAt }}</small>
+</li>
+{% endfor %}
+</ul>
+
 {% endblock %}

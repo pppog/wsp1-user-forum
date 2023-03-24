@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const nunjucks = require('nunjucks');
 var session = require('express-session')
+var validator = require('validator');
+
+validator.isEmail('foo@bar.com'); //=> true
 
 const indexRouter = require('./routes/index');
 

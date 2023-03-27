@@ -21,6 +21,12 @@ router.get('/', async function (req, res, next) {
     });
 });
 
+router.get('/internet', async function (req, res, next) {
+    res.render('internet.njk', {
+        title: 'Pranked',
+    });
+});
+
 router.get('/access', async function (req, res, next) {
     res.render('access.njk', {
         title: 'ACCESS DENIED',

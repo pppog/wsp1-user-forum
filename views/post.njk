@@ -11,6 +11,9 @@
     {% if loggedin === true %}
     <a href="/comment/ {{ post.id }}" class="btn btn-primary">Kommentera</a>
     {% endif %}
+    {% if uid === post.authorId %}
+    <a href="/edit/ {{ post.id }}" class="btn btn-primary">Edit</a>
+    {% endif %}
   </div>
 </div>
 <small class="text-muted">{{ post.createdAt }}</small>

@@ -56,6 +56,7 @@ router.get('/post/:id', async function (req, res, next) {
         rows: comments,
         title: 'Post',
         loggedin: req.session.loggedin || false,
+        uid: req.session.userid,
     });
 });
 
@@ -108,6 +109,50 @@ router.post('/new', async function (req, res, next) {
     // kör frågan för att skapa ett nytt inlägg
     const [rows] = await promisePool.query('INSERT INTO lo28forum (authorId, title, content) VALUES (?, ?, ?)', [userId, title, content]);
     res.redirect('/'); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
+});
+
+router.post('/edit', async function (req, res, next) {
+    const {postid, content} = req.body;
+
+    // Skapa en ny författare om den inte finns men du behöver kontrollera om användare finns!
+    let [user] = await promisePool.query('SELECT * FROM lo28users WHERE id = ?', [req.session.userid]);
+    if (!user) {
+        user = await promisePool.query('INSERT INTO lo28users (name) VALUES (?)', [req.session.userid]);
+    }
+
+    // user.insertId bör innehålla det nya ID:t för författaren
+
+    const userId = user.insertId || user[0].id;
+
+    // kör frågan för att skapa ett nytt inlägg
+    const [rows] = await promisePool.query('UPDATE lo28forum SET content = ? WHERE id = ?', [content, postid]);
+    res.redirect('/post/' + postid); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
+});
+
+router.get('/edit/:postid', async function (req, res, next) {
+    if (req.session.loggedin === undefined) {
+        
+        return res.status(401).redirect('/access');
+    } else {
+        const [post] = await promisePool.query(
+            `SELECT lo28forum.*, lo28users.name AS username
+        FROM lo28forum
+        JOIN lo28users ON lo28forum.authorId = lo28users.id
+        WHERE lo28forum.id = ?;`,
+            [req.params.postid]
+        );
+        if (req.session.userid !== post[0].authorId) {
+        
+            return res.status(401).redirect('/access');
+        } else {
+    res.render('edit.njk', {
+        title: 'edit',
+        post: post[0],
+        userid: req.session.userid,
+        loggedin: req.session.loggedin,
+    });
+}
+}
 });
 
 

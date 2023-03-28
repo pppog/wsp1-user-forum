@@ -12,3 +12,6 @@ Ska göra så att login och signup knappen försvinner då man är inloggad.
 
 ## 2023-03-24 (fredag)
 Sist fixade jag en profil/user page, nu ska jag försöka fixa kommentarer.
+
+## 2023-03-28 (tisdag)
+Nu ska jag fixa så att man kan edita posts.

@@ -117,7 +117,9 @@ router.post('/new', async function (req, res, next) {
         if (title) sanitizedTitle = sanitize(title);
         if (content) sanitizedContent = sanitize(content);
     } else {
-        return res.json(errors);
+        return res.render('errors.njk', {
+            rows: errors,
+        });
     }
 
     // Skapa en ny författare om den inte finns men du behöver kontrollera om användare finns!

@@ -18,7 +18,7 @@
   <img src="../img/alexandro.png" class="card-img-top" alt="alekandro">
   <p>{{ row.name }}</p>
   <div class="card-body">
-    <h5 class="card-title">{{ row.title }}</h5>
+    <h5 class="card-title">{{ row.title | urlize | safe }}</h5>
     <a href="/post/{{ row.id }}" class="btn btn-primary">Visit post</a>
   </div>
 </div>

@@ -6,8 +6,8 @@
   <p>{{ post.username }}</p>
   </a>
   <div class="card-body">
-    <h5 class="card-title">{{ post.title }}</h5>
-    <p class="card-text">{{ post.content }}</p>
+    <h5 class="card-title">{{ post.title | urlize | safe }}</h5>
+    <p class="card-text">{{ post.content | urlize | safe }}</p>
     {% if loggedin === true %}
     <a href="/comment/ {{ post.id }}" class="btn btn-primary">Kommentera</a>
     {% endif %}
@@ -28,7 +28,7 @@
   <p>{{ row.name }}</p>
   </a>
   <div class="card-body">
-    <h5 class="card-title">{{ row.ucomment }}</h5>
+    <h5 class="card-title">{{ row.ucomment | urlize | safe }}</h5>
   </div>
 </div>
 <small class="text-muted">{{ row.createdAt }}</small>

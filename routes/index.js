@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+var validator = require('validator');
 
 const mysql = require('mysql2');
 const pool = mysql.createPool({
@@ -96,6 +97,29 @@ router.get('/new', async function (req, res, next) {
 router.post('/new', async function (req, res, next) {
     const {title, content } = req.body;
 
+    const errors = [];
+
+    if (!title) errors.push('Title is required');
+    if (!content) errors.push('Content is required');
+    if (title && title.length <= 3)
+        errors.push('Title must be at least 3 characters');
+    if (content && content.length <= 10)
+        errors.push('Content must be at least 10 characters');
+
+    if (errors.length === 0) {
+        // sanitize title och body, tvätta datan
+        const sanitize = (str) => {
+            let temp = str.trim();
+            temp = validator.stripLow(temp);
+            temp = validator.escape(temp);
+            return temp;
+        };
+        if (title) sanitizedTitle = sanitize(title);
+        if (content) sanitizedContent = sanitize(content);
+    } else {
+        return res.json(errors);
+    }
+
     // Skapa en ny författare om den inte finns men du behöver kontrollera om användare finns!
     let [user] = await promisePool.query('SELECT * FROM lo28users WHERE id = ?', [req.session.userid]);
     if (!user) {
@@ -107,13 +131,33 @@ router.post('/new', async function (req, res, next) {
     const userId = user.insertId || user[0].id;
 
     // kör frågan för att skapa ett nytt inlägg
-    const [rows] = await promisePool.query('INSERT INTO lo28forum (authorId, title, content) VALUES (?, ?, ?)', [userId, title, content]);
+    const [rows] = await promisePool.query('INSERT INTO lo28forum (authorId, title, content) VALUES (?, ?, ?)', [userId, sanitizedTitle, sanitizedContent]);
     res.redirect('/'); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
 });
 
 router.post('/edit', async function (req, res, next) {
     const {postid, content} = req.body;
 
+    const errors = [];
+
+    if (!content) errors.push('Content is required');
+    if (content && content.length <= 10)
+        errors.push('Content must be at least 10 characters');
+
+    if (errors.length === 0) {
+        // sanitize title och body, tvätta datan
+        const sanitize = (str) => {
+            let temp = str.trim();
+            temp = validator.stripLow(temp);
+            temp = validator.escape(temp);
+            return temp;
+        };
+        if (content) sanitizedContent = sanitize(content);
+    } else {
+        return res.json(errors);
+    }
+
+
     // Skapa en ny författare om den inte finns men du behöver kontrollera om användare finns!
     let [user] = await promisePool.query('SELECT * FROM lo28users WHERE id = ?', [req.session.userid]);
     if (!user) {
@@ -125,7 +169,7 @@ router.post('/edit', async function (req, res, next) {
     const userId = user.insertId || user[0].id;
 
     // kör frågan för att skapa ett nytt inlägg
-    const [rows] = await promisePool.query('UPDATE lo28forum SET content = ? WHERE id = ?', [content, postid]);
+    const [rows] = await promisePool.query('UPDATE lo28forum SET content = ? WHERE id = ?', [sanitizedContent, postid]);
     res.redirect('/post/' + postid); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
 });
 
@@ -159,6 +203,27 @@ router.get('/edit/:postid', async function (req, res, next) {
 router.post('/comment', async function (req, res, next) {
     const {postid, content} = req.body;
 
+
+    const errors = [];
+
+    if (!content) errors.push('Content is required');
+    if (content && content.length <= 10)
+        errors.push('Content must be at least 10 characters');
+
+    if (errors.length === 0) {
+        // sanitize title och body, tvätta datan
+        const sanitize = (str) => {
+            let temp = str.trim();
+            temp = validator.stripLow(temp);
+            temp = validator.escape(temp);
+            return temp;
+        };
+        if (content) sanitizedContent = sanitize(content);
+    } else {
+        return res.json(errors);
+    }
+
+    
     // Skapa en ny författare om den inte finns men du behöver kontrollera om användare finns!
     let [user] = await promisePool.query('SELECT * FROM lo28users WHERE id = ?', [req.session.userid]);
     if (!user) {
@@ -170,7 +235,7 @@ router.post('/comment', async function (req, res, next) {
     const userId = user.insertId || user[0].id;
 
     // kör frågan för att skapa ett nytt inlägg
-    const [rows] = await promisePool.query('INSERT INTO lo28comments (authorId, postid, content) VALUES (?, ?, ?)', [userId, postid, content]);
+    const [rows] = await promisePool.query('INSERT INTO lo28comments (authorId, postid, content) VALUES (?, ?, ?)', [userId, postid, sanitizedContent]);
     res.redirect('/'); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
 });
 
@@ -306,7 +371,7 @@ router.post('/login', async function (req, res, next) {
         }
     });
 } else {
-    return res.redirect("/login");
+    return res.json("That user does not exist");
 }
 });
 

@@ -16,6 +16,7 @@
     "nodemon": "^2.0.21"
   },
   "dependencies": {
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.3",
     "cookie-parser": "^1.4.6",

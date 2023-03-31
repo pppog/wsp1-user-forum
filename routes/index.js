@@ -119,6 +119,7 @@ router.post('/new', async function (req, res, next) {
     } else {
         return res.render('errors.njk', {
             rows: errors,
+            loggedin: req.session.loggedin || false,
         });
     }
 
@@ -162,6 +163,7 @@ router.post('/edit', async function (req, res, next) {
     } else {
         return res.render('errors.njk', {
             rows: errors,
+            loggedin: req.session.loggedin || false,
         });
     }
 
@@ -230,6 +232,7 @@ router.post('/comment', async function (req, res, next) {
     } else {
         return res.render('errors.njk', {
             rows: errors,
+            loggedin: req.session.loggedin || false,
         });
     }
 
@@ -330,6 +333,7 @@ router.post('/register', async function (req, res, next){
     if (errors.length > 0) {
             return res.render('errors.njk', {
                 rows: errors,
+                loggedin: req.session.loggedin || false,
             });
     } else {
         bcrypt.hash(password, 10, async function (err, hash) {
@@ -353,6 +357,7 @@ router.post('/changeusername', async function (req, res, next){
     if (errors.length > 0) {
             return res.render('errors.njk', {
                 rows: errors,
+                loggedin: req.session.loggedin || false,
             });
     }
     
@@ -363,6 +368,7 @@ router.post('/changeusername', async function (req, res, next){
     if (errors.length > 0) {
             return res.render('errors.njk', {
                 rows: errors,
+                loggedin: req.session.loggedin || false,
             });
     } else {
     const [newUser] = await promisePool.query('UPDATE lo28users SET name = ? where id = ?', [username, userid])
@@ -413,6 +419,7 @@ router.post('/login', async function (req, res, next) {
     if (errors.length > 0) {
             return res.render('errors.njk', {
                 rows: errors,
+                loggedin: req.session.loggedin || false,
             });
     }
 
@@ -429,6 +436,7 @@ router.post('/login', async function (req, res, next) {
             errors.push('Invalid password')
             return res.render('errors.njk', {
                 rows: errors,
+                loggedin: req.session.loggedin || false,
             });
         }
     });
@@ -436,6 +444,7 @@ router.post('/login', async function (req, res, next) {
     errors.push('User does not exist')
     return res.render('errors.njk', {
         rows: errors,
+        loggedin: req.session.loggedin || false,
     });
 }
 });

@@ -311,7 +311,10 @@ router.post('/register', async function (req, res, next){
     
     if (username === '') {
         errors.push('Username is Required');
-    } else {
+    }
+
+    if (!validator.isAlphanumeric(username,'en-US')) {
+        errors.push('Username is not alphanumeric');
     }
 
     if (password === '') {
@@ -338,11 +341,54 @@ router.post('/register', async function (req, res, next){
     }
 });
 
+
+router.post('/changeusername', async function (req, res, next){
+    const { userid, username } = req.body;
+    const errors = [];
+    console.log("USER ID IS: " + userid + " AND YOUR NEW USERNAME IS: " + username)
+    
+    if (username === '') {
+        errors.push('Username is Required');
+    }
+    if (errors.length > 0) {
+            return res.render('errors.njk', {
+                rows: errors,
+            });
+    }
+    
+    const [userCheck] = await promisePool.query('SELECT name FROM lo28users WHERE name = ?',[username],);
+    if (userCheck.length > 0){
+        errors.push('Username is already taken');
+    }
+    if (errors.length > 0) {
+            return res.render('errors.njk', {
+                rows: errors,
+            });
+    } else {
+    const [newUser] = await promisePool.query('UPDATE lo28users SET name = ? where id = ?', [username, userid])
+    req.session.username = username;
+            return res.redirect('/profile');
+    }
+});
+
+router.get('/changeusername', async function (req, res, next){
+    if (req.session.loggedin = 1) {
+    res.render('changeusername.njk', {
+        title: 'Update username',
+        userid: req.session.userid,
+    });
+} else {
+return res.render('access.njk')
+}
+});
+
 router.get('/register', async function (req, res, next){
     res.render('register.njk', {
         title: 'Register ALC',
     });
 });
+
+
 
 
 router.get('/login', function (req, res, next) {
@@ -358,7 +404,6 @@ router.post('/login', async function (req, res, next) {
     if (username === '') {
         //console.log('Username is Required');
         errors.push('Username is Required');
-    } else {
     }
 
     if (password === '') {
@@ -381,11 +426,17 @@ router.post('/login', async function (req, res, next) {
             req.session.username = username;
             return res.redirect('/profile');
         } else {
-            return res.json('Invalid username or password');
+            errors.push('Invalid password')
+            return res.render('errors.njk', {
+                rows: errors,
+            });
         }
     });
 } else {
-    return res.json("That user does not exist");
+    errors.push('User does not exist')
+    return res.render('errors.njk', {
+        rows: errors,
+    });
 }
 });
 

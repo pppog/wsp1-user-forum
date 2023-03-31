@@ -2,11 +2,15 @@
 {% block  content %}
 <main class="container mt-3">
     <h1>{{ title }}</h1>
-    <p>Username: {{ username }}</p>
+    <p>Hello {{ username }}</p>
     <a href="/logout">
     <button type="submit">Logout</button>
     </a>
-    <p>This is your profile :)</p>
+    <br>
+    <a href="/changeusername">
+    <button type="submit">Change username</button>
+    </a>
+    <br>
     <a href="/delete">
     <button type="submit">DELETE MY PROFILE!!! 🤬😈😡👹💀</button>
     </a>

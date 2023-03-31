@@ -1,0 +1,11 @@
+{% extends "layout.njk" %}
+{% block  content %}
+<h1>{{title}}</h1>
+<form action="/changeusername" method="POST">
+
+<textarea name="userid" id="userid" cols="0" rows="0" placeholder="userid" hidden>{{ userid }}</textarea>
+    <label for="username">New username</label>
+    <input type="text" name="username" id="username">
+
+<button type="submit">Submit changes</button>
+{% endblock %}

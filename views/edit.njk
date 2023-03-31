@@ -7,7 +7,7 @@
   <img src="../img/alexandro.png" class="card-img-top" alt="alekandro">
   <p>{{ post.username }}</p>
   <div class="card-body">
-    <h5 class="card-title">{{ post.title }}</h5>
+    <h5 class="card-title"><textarea name="title" id="title" cols="30" rows="10" placeholder="ok ok ok" class="card-text">{{ post.title }}</textarea></h5>
     <textarea name="postid" id="postid" cols="0" rows="0" placeholder="postid" hidden>{{ post.id }}</textarea>
         <textarea name="content" id="content" cols="30" rows="10" placeholder="ok ok ok" class="card-text">{{ post.content }}</textarea>
             <button type="submit">Submit changes</button>

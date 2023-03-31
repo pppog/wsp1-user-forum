@@ -138,11 +138,14 @@ router.post('/new', async function (req, res, next) {
 });
 
 router.post('/edit', async function (req, res, next) {
-    const {postid, content} = req.body;
+    const {title, postid, content} = req.body;
 
     const errors = [];
 
+    if (!title) errors.push('Title is required');
     if (!content) errors.push('Content is required');
+    if (title && title.length <= 3)
+        errors.push('Title must be at least 3 characters');
     if (content && content.length <= 10)
         errors.push('Content must be at least 10 characters');
 
@@ -154,9 +157,12 @@ router.post('/edit', async function (req, res, next) {
             temp = validator.escape(temp);
             return temp;
         };
+        if (title) sanitizedTitle = sanitize(title);
         if (content) sanitizedContent = sanitize(content);
     } else {
-        return res.json(errors);
+        return res.render('errors.njk', {
+            rows: errors,
+        });
     }
 
 
@@ -171,7 +177,7 @@ router.post('/edit', async function (req, res, next) {
     const userId = user.insertId || user[0].id;
 
     // kör frågan för att skapa ett nytt inlägg
-    const [rows] = await promisePool.query('UPDATE lo28forum SET content = ? WHERE id = ?', [sanitizedContent, postid]);
+    const [rows] = await promisePool.query('UPDATE lo28forum SET content = ?, title = ? WHERE id = ?', [sanitizedContent, sanitizedTitle, postid]);
     res.redirect('/post/' + postid); // den här raden kan vara bra att kommentera ut för felsökning, du kan då använda tex. res.json({rows}) för att se vad som skickas tillbaka från databasen
 });
 
@@ -222,7 +228,9 @@ router.post('/comment', async function (req, res, next) {
         };
         if (content) sanitizedContent = sanitize(content);
     } else {
-        return res.json(errors);
+        return res.render('errors.njk', {
+            rows: errors,
+        });
     }
 
     
@@ -317,7 +325,9 @@ router.post('/register', async function (req, res, next){
         errors.push('Username is already taken');
     }
     if (errors.length > 0) {
-        return res.json([errors]);
+            return res.render('errors.njk', {
+                rows: errors,
+            });
     } else {
         bcrypt.hash(password, 10, async function (err, hash) {
             const [newUser] = await promisePool.query('INSERT INTO lo28users (name, password) VALUES (?, ?)', [username, hash])
@@ -356,7 +366,9 @@ router.post('/login', async function (req, res, next) {
         errors.push('Password is Required');
     }
     if (errors.length > 0) {
-        return res.json([errors]);
+            return res.render('errors.njk', {
+                rows: errors,
+            });
     }
 
     const [users] = await promisePool.query('SELECT * FROM lo28users WHERE name = ?', [username],);

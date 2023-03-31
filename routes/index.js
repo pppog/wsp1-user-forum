@@ -3,7 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 var validator = require('validator');
 var Filter = require('bad-words'),
-    filter = new Filter();
+    ofilter = new Filter();
+    var filter = new Filter({ placeHolder: 'agel '});
     filter.addWords('agel');
 
 const mysql = require('mysql2');
@@ -161,8 +162,8 @@ router.post('/edit', async function (req, res, next) {
             temp = validator.escape(temp);
             return temp;
         };
-        if (title) sanitizedTitle = sanitize(title);
-        if (content) sanitizedContent = sanitize(content);
+        if (title) sanitizedTitle = filter.clean(sanitize(title));
+        if (content) sanitizedContent = filter.clean(sanitize(content));
     } else {
         return res.render('errors.njk', {
             rows: errors,
@@ -231,7 +232,7 @@ router.post('/comment', async function (req, res, next) {
             temp = validator.escape(temp);
             return temp;
         };
-        if (content) sanitizedContent = sanitize(content);
+        if (content) sanitizedContent = filter.clean(sanitize(content));
     } else {
         return res.render('errors.njk', {
             rows: errors,
